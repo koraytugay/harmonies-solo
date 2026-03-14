@@ -27,12 +27,60 @@ function initGame() {
     setTimeout(() => drawNewTokensWithAnimation(), 100);
 }
 
+// Discard current tokens with falling animation
+async function discardCurrentTokens() {
+    const groupsContainer = document.getElementById('tokenGroups');
+    const allTokens = groupsContainer.querySelectorAll('.token');
+
+    // Animate all tokens falling off screen
+    const fallPromises = [];
+    allTokens.forEach((token, index) => {
+        const promise = new Promise(resolve => {
+            const rect = token.getBoundingClientRect();
+
+            // Create a clone for animation
+            const animToken = token.cloneNode(true);
+            animToken.style.position = 'fixed';
+            animToken.style.left = `${rect.left}px`;
+            animToken.style.top = `${rect.top}px`;
+            animToken.style.zIndex = '999';
+            animToken.style.transition = 'all 0.8s ease-in';
+            document.body.appendChild(animToken);
+
+            // Remove original
+            token.style.opacity = '0';
+
+            // Start falling animation
+            setTimeout(() => {
+                animToken.style.top = `${window.innerHeight + 100}px`;
+                animToken.style.transform = `${animToken.style.transform} rotate(${Math.random() * 360}deg)`;
+            }, index * 50); // Stagger the start times
+
+            // Clean up after animation
+            setTimeout(() => {
+                animToken.remove();
+                resolve();
+            }, 800 + (index * 50));
+        });
+        fallPromises.push(promise);
+    });
+
+    await Promise.all(fallPromises);
+    groupsContainer.innerHTML = '';
+}
+
 // Draw tokens with animation
 async function drawNewTokensWithAnimation() {
     // Check if we have enough tokens
     if (gameState.pileTokenElements.length < 9) {
         alert('Not enough tokens remaining!');
         return false;
+    }
+
+    // Discard current tokens if any exist
+    const groupsContainer = document.getElementById('tokenGroups');
+    if (groupsContainer.children.length > 0) {
+        await discardCurrentTokens();
     }
 
     // Select 9 random token elements from the pile
@@ -56,10 +104,6 @@ async function drawNewTokensWithAnimation() {
         newTokens.slice(3, 6),
         newTokens.slice(6, 9)
     ];
-
-    // Clear the current token groups display
-    const groupsContainer = document.getElementById('tokenGroups');
-    groupsContainer.innerHTML = '';
 
     // Create the group divs
     const groupDivs = [];
