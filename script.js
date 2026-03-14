@@ -139,18 +139,16 @@ async function drawNewTokens() {
                 const token = document.createElement('div');
                 token.className = `token ${tokens[tokenIndex]}`;
                 token.style.opacity = '0';
-                token.style.transform = 'scale(0.8)';
-                token.style.transition = 'all 0.4s ease-out';
+                token.style.transition = 'opacity 0.6s ease-out';
 
-                // Random rotation
+                // Random rotation - set immediately without animation
                 const rotation = Math.floor(Math.random() * 360);
-                token.dataset.rotation = rotation;
+                token.style.transform = `rotate(${rotation}deg)`;
 
                 tokenContainer.appendChild(token);
 
                 setTimeout(() => {
                     token.style.opacity = '1';
-                    token.style.transform = `scale(1) rotate(${rotation}deg)`;
                 }, 10);
 
                 setTimeout(resolve, 150);

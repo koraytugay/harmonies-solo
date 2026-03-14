@@ -198,11 +198,6 @@ h1 {
     background-size: cover;
     background-position: center;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
-    transition: all 0.3s ease;
-}
-
-.token:hover {
-    transform: scale(1.08) rotate(5deg);
 }
 
 /* Token Images */
