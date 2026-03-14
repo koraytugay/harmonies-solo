@@ -66,7 +66,7 @@ body::before {
 
 .token-segment {
     height: 100%;
-    transition: width 0.5s ease;
+    transition: width 1s ease-out;
 }
 
 .token-segment.yellow {

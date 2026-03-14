@@ -26,6 +26,15 @@ function initGame() {
 // Update token bar
 function updateTokenCount() {
     const tokenBar = document.getElementById('tokenBar');
+
+    // Store previous widths
+    const previousWidths = {};
+    const existingSegments = tokenBar.querySelectorAll('.token-segment');
+    existingSegments.forEach(seg => {
+        const color = seg.classList[1]; // Second class is the color
+        previousWidths[color] = parseFloat(seg.style.width);
+    });
+
     tokenBar.innerHTML = '';
 
     // Order: yellow, red, green, gray, brown, blue
@@ -38,8 +47,20 @@ function updateTokenCount() {
 
         const segment = document.createElement('div');
         segment.className = `token-segment ${color}`;
-        segment.style.width = `${percentage}%`;
+
+        // Start from previous width if exists
+        if (previousWidths[color] !== undefined) {
+            segment.style.width = `${previousWidths[color]}%`;
+        } else {
+            segment.style.width = `${percentage}%`;
+        }
+
         tokenBar.appendChild(segment);
+
+        // Animate to new width
+        setTimeout(() => {
+            segment.style.width = `${percentage}%`;
+        }, 10);
     });
 }
 
