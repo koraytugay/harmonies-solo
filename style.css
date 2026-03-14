@@ -336,7 +336,7 @@ body::before {
 
     /* Adjust progress bar */
     .token-bar-container {
-        bottom: 50px;
+        bottom: 65px;
         height: 30px;
         border: 3px solid rgb(65, 50, 32);
     }
@@ -389,7 +389,7 @@ body::before {
     }
 
     .token-bar-container {
-        bottom: 40px;
+        bottom: 50px;
         height: 25px;
     }
 
