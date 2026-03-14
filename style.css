@@ -135,8 +135,8 @@ h1 {
 .groups-container {
     position: relative;
     width: 100%;
-    max-width: 700px;
-    height: 600px;
+    max-width: 900px;
+    height: 550px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -144,7 +144,7 @@ h1 {
 
 .groups-container .group:nth-child(1) {
     position: absolute;
-    top: 0;
+    top: 1px;
     left: 50%;
     transform: translateX(-50%);
 }
@@ -152,34 +152,29 @@ h1 {
 .groups-container .group:nth-child(2) {
     position: absolute;
     bottom: 0;
-    left: 50px;
+    left: 50%;
+    transform: translateX(calc(-50% - 155px));
 }
 
 .groups-container .group:nth-child(3) {
     position: absolute;
     bottom: 0;
-    right: 50px;
+    left: 50%;
+    transform: translateX(calc(-50% + 155px));
 }
 
 .group {
     width: 280px;
     height: 280px;
     border-radius: 50%;
-    background: linear-gradient(145deg, rgb(65, 50, 32), rgb(45, 30, 12));
+    background: linear-gradient(145deg, rgba(65, 50, 32, 0.75), rgba(45, 30, 12, 0.75));
     box-shadow:
         inset 0 6px 15px rgba(0, 0, 0, 0.5),
         0 15px 40px rgba(55, 40, 22, 0.5);
+    border: 5px solid rgb(134, 83, 64);
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: all 0.3s ease;
-}
-
-.group:hover {
-    transform: translateY(-8px);
-    box-shadow:
-        inset 0 6px 15px rgba(0, 0, 0, 0.5),
-        0 20px 50px rgba(55, 40, 22, 0.6);
 }
 
 .group-tokens {
