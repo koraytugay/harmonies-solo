@@ -183,6 +183,7 @@ async function drawNewTokens() {
 // Event Listeners
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
+        closeToast();
         const total = Object.values(gameState.remainingTokens).reduce((a, b) => a + b, 0);
         if (total >= 9) {
             drawNewTokens();
@@ -190,6 +191,30 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// Toast functions
+function showToast() {
+    const toast = document.getElementById('toast');
+    toast.classList.add('show');
+}
+
+function closeToast() {
+    const toast = document.getElementById('toast');
+    toast.classList.remove('show');
+    toast.classList.add('falling');
+
+    // Remove falling class after animation completes
+    setTimeout(() => {
+        toast.classList.remove('falling');
+    }, 1200);
+}
+
 // Start the game
 initGame();
+
+// Draw initial tokens and show welcome toast
+setTimeout(() => {
+    drawNewTokens().then(() => {
+        showToast();
+    });
+}, 100);
 

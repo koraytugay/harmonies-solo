@@ -193,6 +193,51 @@ body::before {
     background-color: rgb(186, 59, 80);
 }
 
+/* Toast */
+.toast {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: linear-gradient(145deg, rgba(65, 50, 32, 0.75), rgba(45, 30, 12, 0.75));
+    color: rgb(235, 220, 205);
+    padding: 20px 25px;
+    border-radius: 12px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.4);
+    border: 3px solid rgb(65, 50, 32);
+    max-width: 320px;
+    opacity: 0;
+    transform: translateX(400px);
+    transition: all 1s ease;
+    z-index: 2000;
+}
+
+.toast.show {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.toast.falling {
+    opacity: 0;
+    transform: translateY(1000px) rotate(45deg);
+    transition: all 1.2s ease-in;
+}
+
+.toast-content {
+    display: flex;
+    align-items: flex-start;
+}
+
+.toast-content p {
+    margin: 0;
+    font-size: 1.1rem;
+    line-height: 1.5;
+}
+
+.toast-content strong {
+    color: rgb(211, 165, 42);
+    font-weight: 700;
+}
+
 /* Controls */
 .controls {
     display: flex;
