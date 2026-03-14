@@ -48,14 +48,14 @@ function updateTokenCount() {
         const segment = document.createElement('div');
         segment.className = `token-segment ${color}`;
 
-        // Start from previous width if exists
-        if (previousWidths[color] !== undefined) {
-            segment.style.width = `${previousWidths[color]}%`;
-        } else {
-            segment.style.width = `${percentage}%`;
-        }
+        // Start from previous width (or current if first time)
+        const startWidth = previousWidths[color] !== undefined ? previousWidths[color] : percentage;
+        segment.style.width = `${startWidth}%`;
 
         tokenBar.appendChild(segment);
+
+        // Force reflow to ensure initial width is registered
+        segment.offsetHeight;
 
         // Animate to new width
         setTimeout(() => {
