@@ -10,17 +10,25 @@
     <div class="container">
         <div class="header">
             <h1>Harmonies Solo</h1>
-            <button id="restartBtn" class="btn btn-restart">Restart Game</button>
+            <button id="restartBtn" class="btn btn-restart">Restart</button>
         </div>
 
-        <div class="token-pile-container">
-            <div id="tokenPile" class="token-pile"></div>
-        </div>
+        <div class="token-count-display" id="tokenCountDisplay">120 tokens remaining</div>
 
-        <div class="token-groups" id="tokenGroups"></div>
+        <div class="groups-container" id="groupsContainer">
+            <div class="group" data-group="1">
+                <div class="group-tokens"></div>
+            </div>
+            <div class="group" data-group="2">
+                <div class="group-tokens"></div>
+            </div>
+            <div class="group" data-group="3">
+                <div class="group-tokens"></div>
+            </div>
+        </div>
 
         <div class="controls">
-            <button id="discardBtn" class="btn btn-primary">Discard & Draw New</button>
+            <button id="drawBtn" class="btn btn-draw">Draw New Selection</button>
         </div>
     </div>
     <script src="script.js"></script>
