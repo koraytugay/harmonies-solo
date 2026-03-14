@@ -190,12 +190,14 @@ async function drawNewTokens() {
             // Force reflow to ensure initial state is registered
             token.offsetHeight;
 
-            // Now set transition and fade in
+            // Now set transition and fade in with random delay
             token.style.transition = 'opacity 1.5s ease-out';
 
+            // Random delay between 0-800ms
+            const randomDelay = Math.random() * 800;
             setTimeout(() => {
                 token.style.opacity = '1';
-            }, 10);
+            }, 10 + randomDelay);
         }
     }
 
