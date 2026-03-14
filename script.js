@@ -58,18 +58,31 @@ async function discardTokens() {
     allTokens.forEach((token, index) => {
         const promise = new Promise(resolve => {
             const rect = token.getBoundingClientRect();
+            const currentTransform = window.getComputedStyle(token).transform;
 
-            // Create falling clone
-            const fallToken = token.cloneNode(true);
+            // Calculate center of original token
+            const centerX = rect.left + rect.width / 2;
+            const centerY = rect.top + rect.height / 2;
+
+            // Hide original immediately
+            token.style.opacity = '0';
+            token.style.transition = 'none';
+
+            // Create falling clone positioned at center
+            const fallToken = document.createElement('div');
+            fallToken.className = token.className;
             fallToken.style.position = 'fixed';
-            fallToken.style.left = `${rect.left}px`;
-            fallToken.style.top = `${rect.top}px`;
+            // Position so that the center of the 75x75 element is at the original center
+            fallToken.style.left = `${centerX - 37.5}px`;
+            fallToken.style.top = `${centerY - 37.5}px`;
+            fallToken.style.transform = currentTransform;
             fallToken.style.zIndex = '1000';
-            fallToken.style.transition = 'all 1s ease-in';
+            fallToken.style.transition = 'none';
             document.body.appendChild(fallToken);
 
-            // Hide original
-            token.style.opacity = '0';
+            // Force reflow
+            fallToken.offsetHeight;
+            fallToken.style.transition = 'top 1s ease-in, transform 1s ease-in';
 
             // Fall animation
             setTimeout(() => {
@@ -93,18 +106,16 @@ async function discardTokens() {
     });
 }
 
-// Draw new tokens - no animations
-function drawNewTokens() {
+// Draw new tokens with falling animation for old tokens
+async function drawNewTokens() {
     const total = Object.values(gameState.remainingTokens).reduce((a, b) => a + b, 0);
     if (total < 9) {
         alert('Not enough tokens remaining!');
         return;
     }
 
-    // Clear current tokens
-    document.querySelectorAll('.group-tokens').forEach(container => {
-        container.innerHTML = '';
-    });
+    // Discard current tokens with falling animation
+    await discardTokens();
 
     // Select 9 random tokens
     const tokenPool = [];
