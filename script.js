@@ -92,12 +92,21 @@ async function discardTokens() {
             token.style.transition = 'none';
 
             // Create falling clone positioned at center
+            // Use computed size to handle mobile responsiveness
+            const computedStyle = window.getComputedStyle(token);
+            const actualWidth = parseFloat(computedStyle.width);
+            const actualHeight = parseFloat(computedStyle.height);
+            const halfWidth = actualWidth / 2;
+            const halfHeight = actualHeight / 2;
+
             const fallToken = document.createElement('div');
             fallToken.className = token.className;
             fallToken.style.position = 'fixed';
-            // Position so that the center of the 75x75 element is at the original center
-            fallToken.style.left = `${centerX - 37.5}px`;
-            fallToken.style.top = `${centerY - 37.5}px`;
+            fallToken.style.width = `${actualWidth}px`;
+            fallToken.style.height = `${actualHeight}px`;
+            // Position so that the center of the element is at the original center
+            fallToken.style.left = `${centerX - halfWidth}px`;
+            fallToken.style.top = `${centerY - halfHeight}px`;
             fallToken.style.transform = currentTransform;
             fallToken.style.zIndex = '1000';
             fallToken.style.transition = 'none';
