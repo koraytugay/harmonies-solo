@@ -12,7 +12,8 @@ const INITIAL_TOKENS = {
 let gameState = {
     remainingTokens: {},
     currentTokens: [],
-    isDrawing: false
+    isDrawing: false,
+    roundNumber: 0
 };
 
 // Initialize the game
@@ -167,6 +168,23 @@ async function drawNewTokens() {
         selectedTokens.slice(3, 6),
         selectedTokens.slice(6, 9)
     ];
+
+    // Log the round
+    gameState.roundNumber++;
+    const tokenNames = {
+        yellow: 'Fields',
+        red: 'House',
+        green: 'Leaves',
+        gray: 'Mountain',
+        brown: 'Trunk',
+        blue: 'Water'
+    };
+
+    console.log(`Round ${gameState.roundNumber}:`);
+    gameState.currentTokens.forEach((group, index) => {
+        const groupStr = group.map(color => tokenNames[color]).join(' - ');
+        console.log(groupStr);
+    });
 
     // Add tokens with fade-in
     const groups = document.querySelectorAll('.group');
