@@ -45,91 +45,95 @@ h2 {
     text-align: center;
 }
 
-/* Token Counter */
-.token-counter {
+/* Token Pile Container */
+.token-pile-container {
     background: rgb(55, 40, 22);
     border: none;
-    padding: 20px;
+    padding: 30px;
     border-radius: 8px;
     margin-bottom: 30px;
+    min-height: 250px;
 }
 
-#tokenCounts {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
+.token-pile {
+    position: relative;
+    width: 50%;
+    height: 175px;
+    margin: 0 auto;
+    border-radius: 100px;
 }
 
-.token-count {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #d3d3d3;
-}
-
-.token-count-color {
-    width: 50px;
-    height: 50px;
+.pile-token {
+    position: absolute;
+    width: 60px;
+    height: 60px;
     border-radius: 50%;
-    border: none;
     background-size: cover;
     background-position: center;
+    transition: all 0.3s ease;
 }
 
-.token-count-color.blue {
+.pile-token.blue {
     background-image: url('resources/water.png');
 }
 
-.token-count-color.gray {
+.pile-token.gray {
     background-image: url('resources/mountain.png');
 }
 
-.token-count-color.brown {
+.pile-token.brown {
     background-image: url('resources/trunk.png');
 }
 
-.token-count-color.green {
+.pile-token.green {
     background-image: url('resources/leaves.png');
 }
 
-.token-count-color.yellow {
+.pile-token.yellow {
     background-image: url('resources/fields.png');
 }
 
-.token-count-color.red {
+.pile-token.red {
     background-image: url('resources/house.png');
 }
 
 /* Token Groups */
 .token-groups {
     display: flex;
-    gap: 100px;
+    gap: 50px;
     margin-bottom: 30px;
     justify-content: center;
     flex-wrap: wrap;
-    background-color: rgb(55, 40, 22);
-    padding: 30px;
-    border-radius: 8px;
 }
 
 .token-group {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 10px;
-    padding: 15px;
-    background: transparent;
-    border: none;
-    border-radius: 8px;
-    width: 160px;
+    position: relative;
+    width: 200px;
+    height: 200px;
+    border-radius: 50%;
+    background-color: rgb(55, 40, 22);
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 
 .token-group .token:first-child {
-    grid-column: 1 / -1;
-    justify-self: center;
+    position: absolute;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.token-group .token:nth-child(2) {
+    position: absolute;
+    bottom: 20px;
+    left: 30px;
+}
+
+.token-group .token:nth-child(3) {
+    position: absolute;
+    bottom: 20px;
+    right: 30px;
 }
 
 .token {

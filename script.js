@@ -11,42 +11,43 @@ const INITIAL_TOKENS = {
 
 let gameState = {
     remainingTokens: {},
-    currentTokens: []
+    currentTokens: [],
+    pileTokenElements: [] // Store references to pile token DOM elements
 };
 
 // Initialize the game
 function initGame() {
     gameState.remainingTokens = { ...INITIAL_TOKENS };
     gameState.currentTokens = [];
-    drawNewTokens();
-    updateDisplay();
+    gameState.pileTokenElements = [];
+    updateTokenCounter();
+    updateTokenGroups();
+    updateDiscardButton();
+    // Don't draw tokens on init, wait for first user action or draw immediately
+    setTimeout(() => drawNewTokensWithAnimation(), 100);
 }
 
-// Draw 3 groups of 3 tokens each
-function drawNewTokens() {
-    const newTokens = [];
-
-    // Create a pool of available tokens
-    const tokenPool = [];
-    for (const [color, count] of Object.entries(gameState.remainingTokens)) {
-        for (let i = 0; i < count; i++) {
-            tokenPool.push(color);
-        }
-    }
-
+// Draw tokens with animation
+async function drawNewTokensWithAnimation() {
     // Check if we have enough tokens
-    if (tokenPool.length < 9) {
+    if (gameState.pileTokenElements.length < 9) {
         alert('Not enough tokens remaining!');
         return false;
     }
 
-    // Draw 9 random tokens
+    // Select 9 random token elements from the pile
+    const selectedTokenElements = [];
+    const newTokens = [];
+
     for (let i = 0; i < 9; i++) {
-        const randomIndex = Math.floor(Math.random() * tokenPool.length);
-        const selectedColor = tokenPool[randomIndex];
-        newTokens.push(selectedColor);
-        tokenPool.splice(randomIndex, 1);
-        gameState.remainingTokens[selectedColor]--;
+        const randomIndex = Math.floor(Math.random() * gameState.pileTokenElements.length);
+        const tokenElement = gameState.pileTokenElements[randomIndex];
+        const color = tokenElement.dataset.color;
+
+        selectedTokenElements.push(tokenElement);
+        newTokens.push(color);
+        gameState.pileTokenElements.splice(randomIndex, 1);
+        gameState.remainingTokens[color]--;
     }
 
     // Group tokens into 3 groups of 3
@@ -56,7 +57,88 @@ function drawNewTokens() {
         newTokens.slice(6, 9)
     ];
 
+    // Clear the current token groups display
+    const groupsContainer = document.getElementById('tokenGroups');
+    groupsContainer.innerHTML = '';
+
+    // Create the group divs
+    const groupDivs = [];
+    for (let i = 0; i < 3; i++) {
+        const groupDiv = document.createElement('div');
+        groupDiv.className = 'token-group';
+        groupsContainer.appendChild(groupDiv);
+        groupDivs.push(groupDiv);
+    }
+
+    // Animate tokens one by one
+    for (let i = 0; i < selectedTokenElements.length; i++) {
+        const groupIndex = Math.floor(i / 3);
+        const tokenIndexInGroup = i % 3;
+        await animateTokenToGroup(selectedTokenElements[i], groupDivs[groupIndex], newTokens[i], tokenIndexInGroup);
+        await new Promise(resolve => setTimeout(resolve, 100));
+    }
+
+    updateDiscardButton();
     return true;
+}
+
+// Animate a single token from pile to group
+function animateTokenToGroup(tokenElement, groupDiv, color, tokenIndexInGroup) {
+    return new Promise(resolve => {
+        const pileRect = tokenElement.getBoundingClientRect();
+        const groupRect = groupDiv.getBoundingClientRect();
+
+        // Get the original rotation from the pile token
+        const originalRotation = tokenElement.style.transform;
+
+        // Calculate target position to match CSS positioning exactly
+        let targetX, targetY;
+        if (tokenIndexInGroup === 0) {
+            // CSS: top: 20px, left: 50%, transform: translateX(-50%)
+            targetX = groupRect.left + groupRect.width / 2;
+            targetY = groupRect.top + 20;
+        } else if (tokenIndexInGroup === 1) {
+            // CSS: bottom: 20px, left: 30px
+            targetX = groupRect.left + 30;
+            targetY = groupRect.top + groupRect.height - 20 - 60;
+        } else {
+            // CSS: bottom: 20px, right: 30px
+            targetX = groupRect.left + groupRect.width - 30 - 60;
+            targetY = groupRect.top + groupRect.height - 20 - 60;
+        }
+
+        // Clone the token for animation
+        const animToken = tokenElement.cloneNode(true);
+        animToken.style.position = 'fixed';
+        animToken.style.left = `${pileRect.left}px`;
+        animToken.style.top = `${pileRect.top}px`;
+        animToken.style.zIndex = '1000';
+        animToken.style.transition = 'all 0.5s ease-out';
+        document.body.appendChild(animToken);
+
+        // Remove original token from pile
+        tokenElement.remove();
+
+        // Trigger animation
+        setTimeout(() => {
+            animToken.style.left = `${targetX}px`;
+            animToken.style.top = `${targetY}px`;
+        }, 10);
+
+        // After animation completes, convert to static token in the group
+        setTimeout(() => {
+            // Remove the animated token
+            animToken.remove();
+
+            // Add static token to the group
+            const tokenDiv = document.createElement('div');
+            tokenDiv.className = `token ${color}`;
+            tokenDiv.style.transform = originalRotation;
+            groupDiv.appendChild(tokenDiv);
+
+            resolve();
+        }, 520);
+    });
 }
 
 // Update the display
@@ -66,34 +148,34 @@ function updateDisplay() {
     updateDiscardButton();
 }
 
-// Update the token counter
+// Update the token pile - only called on init or restart
 function updateTokenCounter() {
-    const countsContainer = document.getElementById('tokenCounts');
-    countsContainer.innerHTML = '';
+    const pileContainer = document.getElementById('tokenPile');
+    pileContainer.innerHTML = '';
+    gameState.pileTokenElements = [];
 
-    const tokenNames = {
-        gray: 'Mountains',
-        red: 'Buildings',
-        brown: 'Trunks',
-        green: 'Leaves',
-        blue: 'Water',
-        yellow: 'Fields'
-    };
+    const containerWidth = pileContainer.offsetWidth;
+    const containerHeight = pileContainer.offsetHeight;
 
+    // Create all tokens as a pile
     for (const [color, count] of Object.entries(gameState.remainingTokens)) {
-        const countDiv = document.createElement('div');
-        countDiv.className = 'token-count';
+        for (let i = 0; i < count; i++) {
+            const tokenDiv = document.createElement('div');
+            tokenDiv.className = `pile-token ${color}`;
+            tokenDiv.dataset.color = color;
 
-        const colorBox = document.createElement('div');
-        colorBox.className = `token-count-color ${color}`;
-        colorBox.style.backgroundColor = getColorRGB(color);
+            // Random position within the container
+            const randomX = Math.random() * (containerWidth - 60);
+            const randomY = Math.random() * (containerHeight - 60);
+            const randomRotation = Math.floor(Math.random() * 360);
 
-        const countText = document.createElement('span');
-        countText.textContent = `${tokenNames[color]}: ${count}`;
+            tokenDiv.style.left = `${randomX}px`;
+            tokenDiv.style.top = `${randomY}px`;
+            tokenDiv.style.transform = `rotate(${randomRotation}deg)`;
 
-        countDiv.appendChild(colorBox);
-        countDiv.appendChild(countText);
-        countsContainer.appendChild(countDiv);
+            pileContainer.appendChild(tokenDiv);
+            gameState.pileTokenElements.push(tokenDiv);
+        }
     }
 }
 
@@ -140,9 +222,7 @@ function getColorRGB(color) {
 
 // Event Listeners
 document.getElementById('discardBtn').addEventListener('click', () => {
-    if (drawNewTokens()) {
-        updateDisplay();
-    }
+    drawNewTokensWithAnimation();
 });
 
 document.getElementById('restartBtn').addEventListener('click', () => {
