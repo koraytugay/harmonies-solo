@@ -163,7 +163,7 @@ async function drawNewTokens() {
 
             // Start invisible
             token.style.opacity = '0';
-            token.style.transition = 'opacity 0.4s ease-out';
+            token.style.transition = 'opacity 1.5s ease-out';
 
             tokenContainer.appendChild(token);
 
@@ -211,10 +211,8 @@ function closeToast() {
 // Start the game
 initGame();
 
-// Draw initial tokens and show welcome toast
+// Show welcome toast on page load
 setTimeout(() => {
-    drawNewTokens().then(() => {
-        showToast();
-    });
+    showToast();
 }, 100);
 
