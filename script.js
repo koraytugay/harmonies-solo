@@ -207,6 +207,19 @@ async function drawNewTokens() {
     gameState.isDrawing = false;
 }
 
+// Fullscreen function
+function toggleFullscreen() {
+    if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(err => {
+            console.log(`Error attempting to enable fullscreen: ${err.message}`);
+        });
+    } else {
+        if (document.exitFullscreen) {
+            document.exitFullscreen();
+        }
+    }
+}
+
 // Event Listeners
 document.addEventListener('keydown', (e) => {
     if (e.key === 'Enter') {
@@ -215,6 +228,8 @@ document.addEventListener('keydown', (e) => {
         if (total >= 9) {
             drawNewTokens();
         }
+    } else if (e.key === 'f' || e.key === 'F') {
+        toggleFullscreen();
     }
 });
 
