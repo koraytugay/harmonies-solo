@@ -163,11 +163,15 @@ async function drawNewTokens() {
 
             // Start invisible
             token.style.opacity = '0';
-            token.style.transition = 'opacity 1.5s ease-out';
 
             tokenContainer.appendChild(token);
 
-            // Fade in after a tiny delay
+            // Force reflow to ensure initial state is registered
+            token.offsetHeight;
+
+            // Now set transition and fade in
+            token.style.transition = 'opacity 1.5s ease-out';
+
             setTimeout(() => {
                 token.style.opacity = '1';
             }, 10);
