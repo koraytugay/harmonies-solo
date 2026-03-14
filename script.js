@@ -11,7 +11,8 @@ const INITIAL_TOKENS = {
 
 let gameState = {
     remainingTokens: {},
-    currentTokens: []
+    currentTokens: [],
+    isDrawing: false
 };
 
 // Initialize the game
@@ -108,11 +109,16 @@ async function discardTokens() {
 
 // Draw new tokens with falling animation for old tokens
 async function drawNewTokens() {
+    // Prevent multiple simultaneous draws
+    if (gameState.isDrawing) return;
+
     const total = Object.values(gameState.remainingTokens).reduce((a, b) => a + b, 0);
     if (total < 9) {
         alert('Not enough tokens remaining!');
         return;
     }
+
+    gameState.isDrawing = true;
 
     // Discard current tokens with falling animation
     await discardTokens();
@@ -170,6 +176,8 @@ async function drawNewTokens() {
 
     updateTokenCount();
     updateDrawButton();
+
+    gameState.isDrawing = false;
 }
 
 // Event Listeners
@@ -179,16 +187,6 @@ document.addEventListener('keydown', (e) => {
         if (total >= 9) {
             drawNewTokens();
         }
-    }
-});
-
-document.getElementById('restartBtn').addEventListener('click', () => {
-    if (confirm('Are you sure you want to restart the game?')) {
-        // Clear all groups
-        document.querySelectorAll('.group-tokens').forEach(container => {
-            container.innerHTML = '';
-        });
-        initGame();
     }
 });
 

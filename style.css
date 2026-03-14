@@ -42,44 +42,6 @@ body::before {
     align-items: center;
 }
 
-/* Header */
-.header {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
-    width: 100%;
-}
-
-h1 {
-    color: rgb(55, 40, 22);
-    margin: 0;
-    font-size: 3.5rem;
-    font-weight: 900;
-    text-shadow: 3px 3px 6px rgba(55, 40, 22, 0.2);
-    letter-spacing: 2px;
-}
-
-.btn-restart {
-    position: absolute;
-    right: 0;
-    background: linear-gradient(135deg, rgb(206, 79, 100), rgb(186, 59, 80));
-    color: white;
-    padding: 12px 28px;
-    font-size: 1rem;
-    font-weight: 700;
-    border: none;
-    border-radius: 30px;
-    cursor: pointer;
-    box-shadow: 0 4px 15px rgba(186, 59, 80, 0.3);
-    transition: all 0.3s ease;
-}
-
-.btn-restart:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(186, 59, 80, 0.4);
-}
-
 /* Token Bar */
 .token-bar-container {
     position: fixed;
@@ -93,7 +55,7 @@ h1 {
     border-radius: 20px;
     overflow: hidden;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
-    border: 5px solid rgb(134, 83, 64);
+    border: 5px solid rgb(65, 50, 32);
 }
 
 .token-bar {
