@@ -218,6 +218,18 @@ document.addEventListener('keydown', (e) => {
     }
 });
 
+// Mobile/desktop tap support - tap anywhere to draw
+document.addEventListener('click', (e) => {
+    // Don't trigger if already drawing
+    if (gameState.isDrawing) return;
+
+    closeToast();
+    const total = Object.values(gameState.remainingTokens).reduce((a, b) => a + b, 0);
+    if (total >= 9) {
+        drawNewTokens();
+    }
+});
+
 // Toast functions
 function showToast() {
     const toast = document.getElementById('toast');
