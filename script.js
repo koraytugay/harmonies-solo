@@ -22,10 +22,24 @@ function initGame() {
     updateDrawButton();
 }
 
-// Update token count display
+// Update token bar
 function updateTokenCount() {
-    const total = Object.values(gameState.remainingTokens).reduce((a, b) => a + b, 0);
-    document.getElementById('tokenCountDisplay').textContent = `${total} tokens remaining`;
+    const tokenBar = document.getElementById('tokenBar');
+    tokenBar.innerHTML = '';
+
+    // Order: yellow, red, green, gray, brown, blue
+    const colorOrder = ['yellow', 'red', 'green', 'gray', 'brown', 'blue'];
+    const total = 120;
+
+    colorOrder.forEach(color => {
+        const count = gameState.remainingTokens[color];
+        const percentage = (count / total) * 100;
+
+        const segment = document.createElement('div');
+        segment.className = `token-segment ${color}`;
+        segment.style.width = `${percentage}%`;
+        tokenBar.appendChild(segment);
+    });
 }
 
 // Update draw button state
@@ -150,8 +164,13 @@ async function drawNewTokens() {
 }
 
 // Event Listeners
-document.getElementById('drawBtn').addEventListener('click', () => {
-    drawNewTokens();
+document.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+        const total = Object.values(gameState.remainingTokens).reduce((a, b) => a + b, 0);
+        if (total >= 9) {
+            drawNewTokens();
+        }
+    }
 });
 
 document.getElementById('restartBtn').addEventListener('click', () => {

@@ -15,6 +15,21 @@ body {
     align-items: center;
     justify-content: center;
     padding: 40px 20px;
+    position: relative;
+}
+
+body::before {
+    content: '';
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-image: url('resources/background.png');
+    background-size: cover;
+    background-position: center;
+    opacity: 0.3;
+    z-index: -1;
 }
 
 .container {
@@ -65,15 +80,55 @@ h1 {
     box-shadow: 0 6px 20px rgba(186, 59, 80, 0.4);
 }
 
-/* Token Count Display */
-.token-count-display {
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: rgb(55, 40, 22);
-    background: rgba(255, 255, 255, 0.6);
-    padding: 15px 40px;
-    border-radius: 50px;
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+/* Token Bar */
+.token-bar-container {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 900px;
+    height: 40px;
+    background: rgb(235, 220, 205);
+    border-radius: 20px;
+    overflow: hidden;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+    border: 5px solid rgb(134, 83, 64);
+}
+
+.token-bar {
+    display: flex;
+    height: 100%;
+    width: 100%;
+}
+
+.token-segment {
+    height: 100%;
+    transition: width 0.5s ease;
+}
+
+.token-segment.yellow {
+    background: rgb(211, 165, 42);
+}
+
+.token-segment.red {
+    background: rgb(186, 59, 80);
+}
+
+.token-segment.green {
+    background: rgb(146, 152, 62);
+}
+
+.token-segment.gray {
+    background: rgb(131, 132, 133);
+}
+
+.token-segment.brown {
+    background: rgb(134, 83, 64);
+}
+
+.token-segment.blue {
+    background: rgb(17, 127, 138);
 }
 
 /* Groups Container - Triangle Layout */
