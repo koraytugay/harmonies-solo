@@ -93,16 +93,18 @@ async function discardTokens() {
     });
 }
 
-// Draw new tokens - fade in animation
-async function drawNewTokens() {
+// Draw new tokens - no animations
+function drawNewTokens() {
     const total = Object.values(gameState.remainingTokens).reduce((a, b) => a + b, 0);
     if (total < 9) {
         alert('Not enough tokens remaining!');
         return;
     }
 
-    // Discard current tokens
-    await discardTokens();
+    // Clear current tokens
+    document.querySelectorAll('.group-tokens').forEach(container => {
+        container.innerHTML = '';
+    });
 
     // Select 9 random tokens
     const tokenPool = [];
@@ -128,31 +130,30 @@ async function drawNewTokens() {
         selectedTokens.slice(6, 9)
     ];
 
-    // Add tokens with fade-in animation
+    // Add tokens with fade-in
     const groups = document.querySelectorAll('.group');
     for (let groupIndex = 0; groupIndex < 3; groupIndex++) {
         const tokenContainer = groups[groupIndex].querySelector('.group-tokens');
         const tokens = gameState.currentTokens[groupIndex];
 
         for (let tokenIndex = 0; tokenIndex < 3; tokenIndex++) {
-            await new Promise(resolve => {
-                const token = document.createElement('div');
-                token.className = `token ${tokens[tokenIndex]}`;
-                token.style.opacity = '0';
-                token.style.transition = 'opacity 0.6s ease-out';
+            const token = document.createElement('div');
+            token.className = `token ${tokens[tokenIndex]}`;
 
-                // Random rotation - set immediately without animation
-                const rotation = Math.floor(Math.random() * 360);
-                token.style.transform = `rotate(${rotation}deg)`;
+            // Random rotation - set immediately
+            const rotation = Math.floor(Math.random() * 360);
+            token.style.transform = `rotate(${rotation}deg)`;
 
-                tokenContainer.appendChild(token);
+            // Start invisible
+            token.style.opacity = '0';
+            token.style.transition = 'opacity 0.4s ease-out';
 
-                setTimeout(() => {
-                    token.style.opacity = '1';
-                }, 10);
+            tokenContainer.appendChild(token);
 
-                setTimeout(resolve, 150);
-            });
+            // Fade in after a tiny delay
+            setTimeout(() => {
+                token.style.opacity = '1';
+            }, 10);
         }
     }
 
@@ -183,30 +184,3 @@ document.getElementById('restartBtn').addEventListener('click', () => {
 // Start the game
 initGame();
 
-// Debug: Log circle center positions
-setTimeout(() => {
-    const groups = document.querySelectorAll('.group');
-    groups.forEach((group, index) => {
-        const rect = group.getBoundingClientRect();
-        const centerX = rect.left + rect.width / 2;
-        const centerY = rect.top + rect.height / 2;
-        console.log(`Circle ${index + 1} center: (${Math.round(centerX)}, ${Math.round(centerY)})`);
-    });
-
-    // Calculate distances between centers
-    const group1 = document.querySelectorAll('.group')[0].getBoundingClientRect();
-    const group2 = document.querySelectorAll('.group')[1].getBoundingClientRect();
-    const group3 = document.querySelectorAll('.group')[2].getBoundingClientRect();
-
-    const center1 = { x: group1.left + group1.width / 2, y: group1.top + group1.height / 2 };
-    const center2 = { x: group2.left + group2.width / 2, y: group2.top + group2.height / 2 };
-    const center3 = { x: group3.left + group3.width / 2, y: group3.top + group3.height / 2 };
-
-    const dist12 = Math.sqrt(Math.pow(center2.x - center1.x, 2) + Math.pow(center2.y - center1.y, 2));
-    const dist13 = Math.sqrt(Math.pow(center3.x - center1.x, 2) + Math.pow(center3.y - center1.y, 2));
-    const dist23 = Math.sqrt(Math.pow(center3.x - center2.x, 2) + Math.pow(center3.y - center2.y, 2));
-
-    console.log(`Distance 1-2: ${Math.round(dist12)}px`);
-    console.log(`Distance 1-3: ${Math.round(dist13)}px`);
-    console.log(`Distance 2-3: ${Math.round(dist23)}px`);
-}, 100);
