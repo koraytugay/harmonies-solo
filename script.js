@@ -107,19 +107,23 @@ async function discardTokens() {
             // Position so that the center of the element is at the original center
             fallToken.style.left = `${centerX - halfWidth}px`;
             fallToken.style.top = `${centerY - halfHeight}px`;
-            fallToken.style.transform = currentTransform;
+            // Preserve the original rotation but force a 3D layer
+            fallToken.style.transform = `${currentTransform} translate3d(0, 0, 0)`;
             fallToken.style.zIndex = '1000';
             fallToken.style.transition = 'none';
+            fallToken.style.pointerEvents = 'none';
+            fallToken.style.willChange = 'transform';
             document.body.appendChild(fallToken);
 
             // Force reflow
             fallToken.offsetHeight;
-            fallToken.style.transition = 'top 1s ease-in, transform 1s ease-in';
+            fallToken.style.transition = 'transform 1s ease-in';
 
             // Fall animation
             setTimeout(() => {
-                fallToken.style.top = `${window.innerHeight + 100}px`;
-                fallToken.style.transform = `rotate(${(Math.random() - 0.5) * 720}deg)`;
+                const distance = window.innerHeight + 100 - (centerY - halfHeight);
+                // Note: overwriting transform will interpolate from original matrix to this new state
+                fallToken.style.transform = `translate3d(0, ${distance}px, 0) rotate(${(Math.random() - 0.5) * 720}deg)`;
             }, index * 60);
 
             setTimeout(() => {
@@ -205,9 +209,9 @@ async function drawNewTokens() {
             const token = document.createElement('div');
             token.className = `token ${tokens[tokenIndex]}`;
 
-            // Random rotation - set immediately
+            // Random rotation - set immediately with 3D transform for performance
             const rotation = Math.floor(Math.random() * 360);
-            token.style.transform = `rotate(${rotation}deg)`;
+            token.style.transform = `translate3d(0, 0, 0) rotate(${rotation}deg)`;
 
             // Start invisible
             token.style.opacity = '0';
@@ -218,7 +222,7 @@ async function drawNewTokens() {
             token.offsetHeight;
 
             // Now set transition and fade in with random delay
-            token.style.transition = 'opacity 1.5s ease-out';
+            token.style.transition = 'opacity 1.5s ease-out, transform 1.5s ease-out';
 
             // Random delay between 0-800ms
             const randomDelay = Math.random() * 800;

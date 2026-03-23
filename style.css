@@ -1,21 +1,34 @@
 /* Reset and base styles */
-* {
+html {
     margin: 0;
     padding: 0;
+    overflow-x: hidden;
+    width: 100%;
+    /* Gradient on HTML to let body pseudo-element stack on top */
+    background: linear-gradient(135deg, rgb(230, 210, 185) 0%, rgb(210, 190, 165) 100%);
+    background-attachment: fixed;
+}
+
+* {
     box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
 }
 
 body {
+    margin: 0;
+    padding: 40px 20px;
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
     line-height: 1.6;
     color: rgb(134, 83, 64);
-    background: linear-gradient(135deg, rgb(230, 210, 185) 0%, rgb(210, 190, 165) 100%);
     min-height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    padding: 40px 20px;
     position: relative;
+    width: 100%;
+    overflow-x: hidden;
+    /* Ensure body doesn't cover its own pseudo-element if it background was here */
+    background: transparent;
 }
 
 body::before {
@@ -154,6 +167,8 @@ body::before {
     display: flex;
     align-items: center;
     justify-content: center;
+    /* Isolate group rendering */
+    contain: paint;
 }
 
 .group-tokens {
@@ -177,6 +192,11 @@ body::before {
     background-size: cover;
     background-position: center;
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    /* Performance optimizations for mobile */
+    -webkit-backface-visibility: hidden;
+    backface-visibility: hidden;
+    transform: translate3d(0, 0, 0);
+    will-change: transform, opacity;
 }
 
 /* Token Images */
@@ -235,7 +255,7 @@ body::before {
 
 .toast.falling {
     opacity: 0;
-    transform: translateY(1000px) rotate(45deg);
+    transform: translate3d(0, 1000px, 0) rotate(45deg);
     transition: all 1.2s ease-in;
 }
 
